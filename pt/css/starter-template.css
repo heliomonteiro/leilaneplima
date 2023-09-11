@@ -1,0 +1,92 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  /*text-align: center;*/
+}
+
+.table {
+
+	/*text-align: left;*/
+}
+
+body {
+font: 12pt;
+color: #000;
+}
+
+h1 {
+	font-weight: bold;
+	font-size: 14pt;
+}
+
+h1.impressao {
+	font-weight: bold;
+	font-size: 14pt;
+	margin-top: -40px;
+}
+
+h2 {
+	font-weight: bold;
+	font-size: 13pt;
+}
+ 
+h3 {
+	font-weight: bold;
+	font-size: 12pt;
+}
+
+h4 {
+	font-weight: bold;
+	font-size: 11pt;
+}
+
+h5 {
+	font-size: 11pt;
+}
+
+.unidades_contextos {
+	text-align: justify;
+	margin-top: 20pt;
+	margin-bottom: 20pt;
+}
+
+.texto_unidade_cntexto {
+	margin-top: 20pt;
+}
+
+strong {
+	font-weight: bold;
+}
+
+/*
+@media print {
+	margin: 0.5cm;
+}
+*/
+
+.body {
+	font-size: 12pt;
+	width: auto;
+}
+
+.foto img{
+    max-width: 800px;
+    /*max-height:250px;*/
+    width: auto;
+    height: auto;
+}
+
+
+.caption {
+
+}
+
+.container {
+
+}
+
+.titulo_imagens {
+	page-break-before: always;
+}

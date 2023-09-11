@@ -1,0 +1,31 @@
+<?php
+  $estados = array(
+    1=>array("sigla"=>"AC","nome"=>"Acre"),
+    2=>array("sigla"=>"AL","nome"=>"Alagoas"),
+    3=>array("sigla"=>"AM","nome"=>"Amazonas"),
+    4=>array("sigla"=>"AP","nome"=>"Amapá"),
+    5=>array("sigla"=>"BA","nome"=>"Bahia"),
+    6=>array("sigla"=>"CE","nome"=>"Ceará"),
+    7=>array("sigla"=>"DF","nome"=>"Distrito Federal"),
+    8=>array("sigla"=>"ES","nome"=>"Espírito Santo"),
+    9=>array("sigla"=>"GO","nome"=>"Goiás"),
+    10=>array("sigla"=>"MA","nome"=>"Maranhão"),
+    11=>array("sigla"=>"MT","nome"=>"Mato Grosso"),
+    11=>array("sigla"=>"MS","nome"=>"Mato Grosso do Sul"),
+    13=>array("sigla"=>"MG","nome"=>"Minas Gerais"),
+    14=>array("sigla"=>"PA","nome"=>"Pará"),
+    15=>array("sigla"=>"PB","nome"=>"Paraiba"),
+    16=>array("sigla"=>"PR","nome"=>"Paraná"),
+    17=>array("sigla"=>"PE","nome"=>"Pernambuco"),
+    18=>array("sigla"=>"PI","nome"=>"Piauí"),
+    19=>array("sigla"=>"RJ","nome"=>"Rio de Janeiro"),
+    20=>array("sigla"=>"RN","nome"=>"Rio Grande do Norte"),
+    21=>array("sigla"=>"RO","nome"=>"Rondônia"),
+    22=>array("sigla"=>"RS","nome"=>"Rio Grande do Sul"),
+    23=>array("sigla"=>"RR","nome"=>"Roraima"),
+    24=>array("sigla"=>"SC","nome"=>"Santa Catarina"),
+    25=>array("sigla"=>"SE","nome"=>"Sergipe"),
+    26=>array("sigla"=>"SP","nome"=>"São Paulo"),
+    27=>array("sigla"=>"TO","nome"=>"Tocantins")
+  );
+?>
