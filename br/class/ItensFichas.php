@@ -1,10 +1,10 @@
 <?php
 
-class CategoriaMuseu {
+class ItensFichas {
 
 	private $conexao;
 
-	private $museu;
+	private $ficha;
 	private $tema;
 	private $unidade_analise;
 	private $unidade_contexto;
@@ -16,14 +16,14 @@ class CategoriaMuseu {
 		$this->conexao = $conexao;
 	}
 
-	public function setMuseu($museu)
+	public function setFicha($ficha)
 	{
-		$this->museu = $museu;
+		$this->ficha = $ficha;
 	}
 
-	public function getMuseu()
+	public function getFicha()
 	{
-		return $this->museu;
+		return $this->ficha;
 	}
 
 	public function setTema($tema)
@@ -89,10 +89,10 @@ class CategoriaMuseu {
 
 	public function inserirCategoria()
 	{
-		$query = "insert into categorias_museus (museu, tema, unidade_analise, unidade_contexto, categoria) 
-			values (:museu, :tema, :unidade_analise, :unidade_contexto, :categoria)";
+		$query = "insert into itens_fichas (ficha, tema, unidade_analise, unidade_contexto, categoria) 
+			values (:ficha, :tema, :unidade_analise, :unidade_contexto, :categoria)";
 		$stmt = $this->conexao->prepare($query);
-		$stmt->bindValue(":museu",$this->getMuseu());
+		$stmt->bindValue(":ficha",$this->getFicha());
 		$stmt->bindValue(":tema",$this->getTema());
 		$stmt->bindValue(":unidade_analise",$this->getUnidadeAnalise());
 		$stmt->bindValue(":unidade_contexto",$this->getUnidadeContexto());
@@ -105,10 +105,10 @@ class CategoriaMuseu {
 
 	public function inserirSubCategoria()
 	{
-		$query = "insert into categorias_museus (museu, tema, unidade_analise, unidade_contexto, categoria, sub_categoria) 
-			values (:museu, :tema, :unidade_analise, :unidade_contexto, :categoria, :sub_categoria)";
+		$query = "insert into itens_fichas (ficha, tema, unidade_analise, unidade_contexto, categoria, sub_categoria) 
+			values (:ficha, :tema, :unidade_analise, :unidade_contexto, :categoria, :sub_categoria)";
 		$stmt = $this->conexao->prepare($query);
-		$stmt->bindValue(":museu",$this->getMuseu());
+		$stmt->bindValue(":ficha",$this->getFicha());
 		$stmt->bindValue(":tema",$this->getTema());
 		$stmt->bindValue(":unidade_analise",$this->getUnidadeAnalise());
 		$stmt->bindValue(":unidade_contexto",$this->getUnidadeContexto());
@@ -120,59 +120,59 @@ class CategoriaMuseu {
 	}
 
 	public function buscaCategoriaPorMuseu(){
-		$query = "select * from categorias_museus where categoria = :categoria and museu = :museu";
+		$query = "select * from itens_fichas where categoria = :categoria and ficha = :ficha";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":categoria",$this->categoria);
-		$stmt->bindValue(":museu",$this->museu);
+		$stmt->bindValue(":ficha",$this->ficha);
 		$stmt->execute();
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
 	public function buscaCategoriasSubCategoriasDoMuseu(){
-		$query = "select * from categorias_museus where museu = :museu";
+		$query = "select * from itens_fichas where ficha = :ficha";
 		$stmt = $this->conexao->prepare($query);
-		$stmt->bindValue(":museu",$this->museu);
+		$stmt->bindValue(":ficha",$this->ficha);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function buscaSubCategoriaPorMuseu(){
-		$query = "select * from categorias_museus where sub_categoria = :sub_categoria and museu = :museu";
+		$query = "select * from itens_fichas where sub_categoria = :sub_categoria and ficha = :ficha";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":sub_categoria",$this->sub_categoria);
-		$stmt->bindValue(":museu",$this->museu);
+		$stmt->bindValue(":ficha",$this->ficha);
 		$stmt->execute();
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
 	public function listarCategoriasPorUcMuseu(){
-		$query = "select distinct(categoria) from categorias_museus where unidade_contexto = :unidade_contexto and museu = :museu";
+		$query = "select distinct(categoria) from itens_fichas where unidade_contexto = :unidade_contexto and ficha = :ficha";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":unidade_contexto",$this->unidade_contexto);
-		$stmt->bindValue(":museu",$this->museu);
+		$stmt->bindValue(":ficha",$this->ficha);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function listarSubCategoriasPorMuseu(){
-		$query = "select * from categorias_museus where categoria = :categoria and museu = :museu";
+		$query = "select * from itens_fichas where categoria = :categoria and ficha = :ficha";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":categoria",$this->categoria);
-		$stmt->bindValue(":museu",$this->museu);
+		$stmt->bindValue(":ficha",$this->ficha);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function alterarCategoriaTexto()
 	{
-		$query = "update categorias_museus set 
+		$query = "update itens_fichas set 
 					texto = :texto 
-				  where museu = :museu
+				  where ficha = :ficha
 				  	and categoria = :categoria";
 
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":texto",$this->getTexto());
-		$stmt->bindValue(":museu",$this->getMuseu());
+		$stmt->bindValue(":ficha",$this->getFicha());
 		$stmt->bindValue(":categoria",$this->getCategoria());
 		if($stmt->execute()){
 			return true;
@@ -181,9 +181,9 @@ class CategoriaMuseu {
 
 	public function deletaCategoria()
 	{
-		$query = "delete from categorias_museus where museu = :museu and categoria = :categoria";
+		$query = "delete from itens_fichas where ficha = :ficha and categoria = :categoria";
 		$stmt = $this->conexao->prepare($query);
-		$stmt->bindValue(":museu", $this->museu);
+		$stmt->bindValue(":ficha", $this->ficha);
 		$stmt->bindValue(":categoria", $this->categoria);
 		if($stmt->execute()){
 			return true;
@@ -192,9 +192,9 @@ class CategoriaMuseu {
 
 	public function deletaSubCategoria()
 	{
-		$query = "delete from categorias_museus where museu = :museu and sub_categoria = :sub_categoria";
+		$query = "delete from itens_fichas where ficha = :ficha and sub_categoria = :sub_categoria";
 		$stmt = $this->conexao->prepare($query);
-		$stmt->bindValue(":museu", $this->museu);
+		$stmt->bindValue(":ficha", $this->ficha);
 		$stmt->bindValue(":sub_categoria", $this->sub_categoria);
 		if($stmt->execute()){
 			return true;
@@ -203,7 +203,7 @@ class CategoriaMuseu {
 
 	public function quantidadeMuseusCategoria()
 	{
-		$query = "select count(museu) as \"quantidade\" from categorias_museus where categoria = :categoria";
+		$query = "select count(museu) as \"quantidade\" from itens_fichas where categoria = :categoria";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":categoria",$this->categoria);
 		$stmt->execute();
@@ -212,7 +212,7 @@ class CategoriaMuseu {
 
 	public function QuaisMuseusUtilizaramEstaCategoria()
 	{
-		$query = "select distinct(museu) as \"museu\" from categorias_museus where categoria = :categoria";
+		$query = "select distinct(museu) as \"museu\" from itens_fichas where categoria = :categoria";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":categoria",$this->categoria);
 		$stmt->execute();
@@ -221,7 +221,7 @@ class CategoriaMuseu {
 
 	public function quantidadeMuseusSubCategoria()
 	{
-		$query = "select count(museu) as \"quantidade\" from categorias_museus where sub_categoria = :sub_categoria";
+		$query = "select count(museu) as \"quantidade\" from itens_fichas where sub_categoria = :sub_categoria";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":sub_categoria",$this->categoria);
 		$stmt->execute();
@@ -230,7 +230,7 @@ class CategoriaMuseu {
 
 	public function QuaisMuseusUtilizaramEstaSubCategoria()
 	{
-		$query = "select distinct(museu) as \"museu\" from categorias_museus where sub_categoria = :sub_categoria";
+		$query = "select distinct(museu) as \"museu\" from itens_fichas where sub_categoria = :sub_categoria";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":sub_categoria",$this->sub_categoria);
 		$stmt->execute();
@@ -239,22 +239,22 @@ class CategoriaMuseu {
 
 	public function buscaCategoriasPorUnidadeDeAnalise()
 	{
-		//$query = "select * from categorias_museus WHERE museu = :museu and unidade_analise = :unidade_analise";
+		//$query = "select * from itens_fichas WHERE ficha = :ficha and unidade_analise = :unidade_analise";
 		$query = "SELECT categoria, 
 					(select tipo_categoria from categorias where categorias.codigo = categoria) as \"tipo_categoria\" 
-				    FROM `categorias_museus` WHERE museu = :museu and unidade_analise = :unidade_analise";
+				    FROM `itens_fichas` WHERE ficha = :ficha and unidade_analise = :unidade_analise";
 		$stmt = $this->conexao->prepare($query);
-		$stmt->bindValue(":museu",$this->museu);
+		$stmt->bindValue(":ficha",$this->ficha);
 		$stmt->bindValue(":unidade_analise",$this->unidade_analise);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function listarSubCategoriasPorUnidadeDeAnalise(){
-		$query = "SELECT * FROM categorias_museus WHERE museu = :museu and unidade_analise = :unidade_analise and sub_categoria is not null;";
+		$query = "SELECT * FROM itens_fichas WHERE ficha = :ficha and unidade_analise = :unidade_analise and sub_categoria is not null;";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":unidade_analise",$this->unidade_analise);
-		$stmt->bindValue(":museu",$this->museu);
+		$stmt->bindValue(":ficha",$this->ficha);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}

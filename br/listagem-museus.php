@@ -32,11 +32,14 @@
 	foreach ($museus as $m) {
 	$cidade->setCodCidade($m['cod_cidade']);
 	$c = $cidade->buscaCidade();
+	$museu->setCodigo($m['codigo']);
+	$qtd_fichas = $museu->buscarQtdFichas();
+	//var_dump($qtd_fichas['qtd_fichas']);
 ?>
 		<tr>
 			<td><label class="label alert-info"> <?= $m['indice'] ?> </label></td>
 			<td><?= $m['codigo'] ?></td>
-			<td><?= $m['nome'] ?></td>
+			<td><?= $m['nome'] ?> (<?= $qtd_fichas['qtd_fichas'] ?>)</td>
 			<?php
 				$data_fundacao = $m['ano_fundacao'];
 				//$data_fundacao = date('Y',strtotime($data_fundacao));

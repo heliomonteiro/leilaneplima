@@ -1,21 +1,24 @@
 <?php
-Class Museu {
+Class Ficha {
 
 	private $conexao;
-	private $table = "museus";
+	private $table = "fichas";
 
 	private $codigo;
 	private $indice;
-	private $nome;
-	private $ano_fundacao;
-	private $sem_fundacao;
+	//private $nome;
+	//private $ano_fundacao;
+	//private $sem_fundacao;
 	private $horario_funcionamento_administrativo;
 	private $horario_atendimento_publico;
 	private $telefone;
-	private $cod_cidade;
+	//private $cod_cidade;
 	private $endereco;
 	private $situacao;
 	private $observacoes;
+	private $revisitacao;
+	private $visita_tecnica;
+	private $museu;
 
 	//CONEXAO
 	public function __construct(\PDO $conexao)
@@ -41,7 +44,7 @@ Class Museu {
 		$this->indice = $indice;
 		return $this;
 	}
-
+/*
 	public function getNome() {
 		return $this->nome;
 	}
@@ -70,7 +73,7 @@ Class Museu {
 		$this->sem_fundacao = $sem_fundacao; //	echo date('Y-m-d', strtotime(str_replace('-','/', $museu->getDataFundacao())))."<br>";
 		return $this;
 	}
-
+*/
 	public function getHorarioFuncionamentoAdministrativo() {
 		return $this->horario_funcionamento_administrativo;
 	}
@@ -97,7 +100,7 @@ Class Museu {
 		$this->telefone = $telefone;
 		return $this;
 	}
-
+/*
 	public function getCodCidade() {
 		return $this->cod_cidade;
 	}
@@ -106,7 +109,7 @@ Class Museu {
 		$this->cod_cidade = $cod_cidade;
 		return $this;
 	}
-
+*/
 	public function getEndereco(){
 		return $this->endereco;
 	}
@@ -134,23 +137,55 @@ Class Museu {
 		return $this;
 	}
 
+	public function getRevisitacao(){
+		return $this->revisitacao;
+	}
+
+	public function setRevisitacao($revisitacao){
+		$this->revisitacao = $revisitacao;
+		return $this;
+	}
+
+	public function getVisitaTecnica(){
+		return $this->visita_tecnica;
+	}
+
+	public function setVisitaTecnica($visita_tecnica){
+		$this->visita_tecnica = $visita_tecnica;
+		return $this;
+	}
+
+	public function getMuseu(){
+		return $this->museu;
+	}
+
+	public function setMuseu($museu){
+		$this->museu = $museu;
+		return $this;
+	}
+
 	//OPERACOES BANCO DE DADOS
 	public function insere()
 	{
-		$query = "INSERT INTO museus(indice, nome, ano_fundacao, sem_fundacao, horario_funcionamento_administrativo, horario_atendimento_publico, telefone, cod_cidade, endereco, situacao, observacoes) 
-			VALUES (:indice, :nome, :ano_fundacao, :sem_fundacao,  :horario_funcionamento_administrativo, :horario_atendimento_publico, :telefone, :cod_cidade, :endereco, :situacao, :observacoes)";
+//		$query = "INSERT INTO museus(indice, nome, ano_fundacao, sem_fundacao, horario_funcionamento_administrativo, horario_atendimento_publico, telefone, cod_cidade, endereco, situacao, observacoes) 
+//			VALUES (:indice, :nome, :ano_fundacao, :sem_fundacao,  :horario_funcionamento_administrativo, :horario_atendimento_publico, :telefone, :cod_cidade, :endereco, :situacao, :observacoes)";
+		$query = "INSERT INTO fichas(indice, horario_funcionamento_administrativo, horario_atendimento_publico, telefone, endereco, situacao, observacoes, revisitacao, visita_tecnica, museu) 
+			VALUES (:indice, :horario_funcionamento_administrativo, :horario_atendimento_publico, :telefone, :endereco, :situacao, :observacoes, :revisitacao, :visita_tecnica, :museu)";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(':indice',$this->indice);
-		$stmt->bindValue(':nome',$this->nome);
-		$stmt->bindValue(':ano_fundacao',$this->ano_fundacao);
-		$stmt->bindValue(':sem_fundacao',$this->sem_fundacao);
+		//$stmt->bindValue(':nome',$this->nome);
+		//$stmt->bindValue(':ano_fundacao',$this->ano_fundacao);
+		//$stmt->bindValue(':sem_fundacao',$this->sem_fundacao);
 		$stmt->bindValue(':horario_funcionamento_administrativo',$this->horario_funcionamento_administrativo);
 		$stmt->bindValue(':horario_atendimento_publico',$this->horario_atendimento_publico);
 		$stmt->bindValue(':telefone',$this->telefone);
-		$stmt->bindValue(':cod_cidade',$this->cod_cidade);
+		//$stmt->bindValue(':cod_cidade',$this->cod_cidade);
 		$stmt->bindValue(':endereco',$this->endereco);
 		$stmt->bindValue(':situacao',$this->situacao);
 		$stmt->bindValue(':observacoes',$this->observacoes);
+		$stmt->bindValue(':revisitacao',$this->revisitacao);
+		$stmt->bindValue(':visita_tecnica',$this->visita_tecnica);
+		$stmt->bindValue(':museu',$this->museu);
 
 		if($stmt->execute()){
 			$last_id = $this->conexao->lastInsertId();
@@ -162,7 +197,7 @@ Class Museu {
 
 	public function listar()
 	{
-		$query = "select * from museus order by indice";
+		$query = "select * from fichas order by indice";
 		$stmt = $this->conexao->query($query);
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -170,7 +205,7 @@ Class Museu {
 
 	public function buscar()
 	{
-		$query = "select * from museus where codigo = :codigo";
+		$query = "select * from fichas where codigo = :codigo";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":codigo",$this->codigo);
 		$stmt->execute();
@@ -179,7 +214,7 @@ Class Museu {
 
 	public function deletar()
 	{
-		$query = "delete from museus where codigo = :codigo";
+		$query = "delete from fichas where codigo = :codigo";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(":codigo", $this->codigo);
 		if($stmt->execute()){
@@ -189,6 +224,7 @@ Class Museu {
 
 	public function alterar()
 	{
+/*
 		$query = "update museus 
 					set indice = :indice,
 					nome = :nome, 
@@ -202,19 +238,35 @@ Class Museu {
 					situacao = :situacao, 
 					observacoes = :observacoes
 				where codigo = :codigo";
+*/
+		$query = "update museus 
+			set indice = :indice,
+				horario_funcionamento_administrativo = :horario_funcionamento_administrativo, 
+				horario_atendimento_publico = :horario_atendimento_publico, 
+				telefone = :telefone, 
+				endereco = :endereco, 
+				situacao = :situacao, 
+				observacoes = :observacoes,
+				revisitacao = :revisitacao,
+				visita_tecnica = :visita_tecnica,
+				museu = :museu
+			where codigo = :codigo";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(':indice',$this->indice);
-		$stmt->bindValue(':nome',$this->nome);
-		$stmt->bindValue(':ano_fundacao',$this->ano_fundacao);
-		$stmt->bindValue(':sem_fundacao',$this->sem_fundacao);
+		//$stmt->bindValue(':nome',$this->nome);
+		//$stmt->bindValue(':ano_fundacao',$this->ano_fundacao);
+		//$stmt->bindValue(':sem_fundacao',$this->sem_fundacao);
 		$stmt->bindValue(':horario_funcionamento_administrativo',$this->horario_funcionamento_administrativo);
 		$stmt->bindValue(':horario_atendimento_publico',$this->horario_atendimento_publico);
 		$stmt->bindValue(':telefone',$this->telefone);
-		$stmt->bindValue(':cod_cidade',$this->cod_cidade);
+		//$stmt->bindValue(':cod_cidade',$this->cod_cidade);
 		$stmt->bindValue(':endereco',$this->endereco);
 		$stmt->bindValue(':situacao',$this->situacao);
 		$stmt->bindValue(':observacoes',$this->observacoes);
 		$stmt->bindValue(':codigo',$this->codigo);
+		$stmt->bindValue(':revisitacao',$this->revisitacao);
+		$stmt->bindValue(':visita_tecnica',$this->visita_tecnica);
+		$stmt->bindValue(':museu',$this->museu);
 
 		if($stmt->execute()){
 			$last_id = $this->conexao->lastInsertId();
@@ -224,12 +276,4 @@ Class Museu {
 			
 	}
 
-	public function buscarQtdFichas()
-	{
-		$query = "select count(*) as qtd_fichas from fichas where museu = :codigo";
-		$stmt = $this->conexao->prepare($query);
-		$stmt->bindValue(":codigo",$this->codigo);
-		$stmt->execute();
-		return $stmt->fetch(PDO::FETCH_ASSOC);
-	}	
 }

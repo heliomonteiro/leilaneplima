@@ -2,10 +2,11 @@
 	  require_once 'class/Conecta.php';
 	  require_once 'class/Cidade.php';
 	  require_once 'class/Museu.php';
+	  require_once 'class/Ficha.php';
 	  require_once 'class/Tema.php';
 	  require_once 'class/UnidadeAnalise.php';
 	  require_once 'class/UnidadeContexto.php';
-	  require_once 'class/CategoriaMuseu.php';
+	  require_once 'class/ItensFichas.php';
 	  require_once 'class/Categoria.php';
 	  require_once 'class/SubCategoria.php';
 	  require_once 'class/ImagensMuseus.php';
@@ -17,14 +18,17 @@
 
 <?php
 	$museu = new Museu($conexao);
+	$ficha = new Ficha($conexao);
 	$cidade = new Cidade($conexao);
 
 	$museu->setCodigo($_GET['codigo']);
 	$m = $museu->buscar();
 
+	$ficha->setCodigo($_GET['codigo']);
+	$f = $ficha->buscar();
+
 	$cidade->setCodCidade($m['cod_cidade']);
 	$c = $cidade->buscaCidade();
-
 
 ?>
 
@@ -43,15 +47,15 @@
 		</tr>
 		<tr>
 			<th>Atendimento Administrativo</th>
-			<td><?= $m['horario_funcionamento_administrativo']?></td>
+			<td><?= $f['horario_funcionamento_administrativo']?></td>
 		</tr>
 		<tr>
 			<th>Atendimento ao público</th>
-			<td><?= $m['horario_atendimento_publico']?></td>
+			<td><?= $f['horario_atendimento_publico']?></td>
 		</tr>
 		<tr>
 			<th>Telefone</th>
-			<td><?= $m['telefone']?></td>
+			<td><?= $f['telefone']?></td>
 		</tr>
 		<tr>
 			<th>Cidade</th>
@@ -59,20 +63,20 @@
 		</tr>
 		<tr>
 			<th>Endereço</th>
-			<td><?= $m['endereco']?></td>
+			<td><?= $f['endereco']?></td>
 		</tr>
 		<tr>
 			<th>Situação</th>
-			<td><?= $m['situacao'] == (1) ? "Ativo" : "Inativo" ; ?> </td>
+			<td><?= $f['situacao'] == (1) ? "Ativo" : "Inativo" ; ?> </td>
 		</tr>
 		<tr>
 			<th>Observações</th>
-			<td class="text-justify"><?= $m['observacoes']?></td>
+			<td class="text-justify"><?= $f['observacoes']?></td>
 		</tr>
 	</table>
 
 <?php
-	if ($m['situacao'] == (1)) { // MOSTRA TODA FICHA ABAIXO
+	if ($f['situacao'] == (1)) { // MOSTRA TODA FICHA ABAIXO
 ?>
 
 	<!-- TEMAS -->
@@ -102,10 +106,10 @@
 						    <ul class="list-group">
 						    	<div class="row">
 							<?php
-								$categoria_museu = new CategoriaMuseu($conexao);
-								$categoria_museu->setMuseu($m['codigo']);
-								$categoria_museu->setUnidadeContexto($uc['codigo']);
-								$lista_categorias_museu = $categoria_museu->listarCategoriasPorUcMuseu(); // lista categorias do museu sem repetir (distinct em categoria)
+								$itens_fichas = new ItensFichas($conexao);
+								$itens_fichas->setFicha($f['codigo']);
+								$itens_fichas->setUnidadeContexto($uc['codigo']);
+								$lista_categorias_museu = $itens_fichas->listarCategoriasPorUcMuseu(); // lista categorias do museu sem repetir (distinct em categoria)
 								//listar categorias tipo checkbox
 								foreach ($lista_categorias_museu as $cm) {
 									$categoria = new Categoria($conexao);
@@ -114,8 +118,8 @@
 
 									switch ($c['tipo_categoria']) {
 										case 1:
-											//$categoria_museu->setCategoria($c['codigo']);
-											//$cm = $categoria_museu->buscaCategoriaPorMuseu();
+											//$itens_fichas->setCategoria($c['codigo']);
+											//$cm = $itens_fichas->buscaCategoriaPorMuseu();
 											?>
 										        <div class="col-md-4 text-left"><li class="list-group-item"> <?= $c['descricao'] ?></li></div>
 										    <?php
@@ -132,15 +136,15 @@
 									$categoria->setCodigo($cm['categoria']);
 									$c = $categoria->buscar();
 
-									//$categoria_museu->setCategoria($c['codigo']);
-									//$cm = $categoria_museu->buscaCategoriaPorMuseu();
+									//$itens_fichas->setCategoria($c['codigo']);
+									//$cm = $itens_fichas->buscaCategoriaPorMuseu();
 									switch ($c['tipo_categoria']) {
 										case 4:
 											?>
 										        <div class="col-md-12"><li class="list-group-item"> <strong><?= $c['descricao'] ?></strong></li></div>
 										    <?php
-										    	$sub_categoria_museu = new CategoriaMuseu($conexao);
-										    	$sub_categoria_museu->setMuseu($m['codigo']);
+										    	$sub_categoria_museu = new ItensFichas($conexao);
+										    	$sub_categoria_museu->setFicha($f['codigo']);
 										    	$sub_categoria_museu->setCategoria($c['codigo']);
 										    	$sub_categorias_museu = $sub_categoria_museu->listarSubCategoriasPorMuseu();
 
@@ -171,8 +175,8 @@
 
 									switch ($c['tipo_categoria']) {
 										case 2:
-											$categoria_museu->setCategoria($c['codigo']);
-											$cm = $categoria_museu->buscaCategoriaPorMuseu();
+											$itens_fichas->setCategoria($c['codigo']);
+											$cm = $itens_fichas->buscaCategoriaPorMuseu();
 												if ( $cm['texto'] != "" ) {
 											?>
 										        <div class="col-md-12 text-left"><li class="list-group-item"> <strong><?= $c['descricao'] ?>: </strong>  <p class="text-justify"><?= $cm['texto'] ?></p> </li></div>
