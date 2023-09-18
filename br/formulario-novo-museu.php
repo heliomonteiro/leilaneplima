@@ -67,7 +67,7 @@
             </div>
 
           </div>
-
+<!--
           <div class="form-group">
             <label for="horario_funcionamento_administrativo" class="col-sm-2 control-label">Horário do atendimento administrativo</label>
             <div class="col-sm-10">
@@ -112,7 +112,7 @@
               <textarea class="form-control" id="observacoes" name="observacoes"></textarea>
             </div>
           </div>
-
+                -->
         </fieldset>
 
           <div class="form-group">

@@ -9,13 +9,13 @@ Class Museu {
 	private $nome;
 	private $ano_fundacao;
 	private $sem_fundacao;
-	private $horario_funcionamento_administrativo;
-	private $horario_atendimento_publico;
-	private $telefone;
+	//private $horario_funcionamento_administrativo;
+	//private $horario_atendimento_publico;
+	//private $telefone;
 	private $cod_cidade;
-	private $endereco;
-	private $situacao;
-	private $observacoes;
+	//private $endereco;
+	//private $situacao;
+	//private $observacoes;
 
 	//CONEXAO
 	public function __construct(\PDO $conexao)
@@ -70,7 +70,7 @@ Class Museu {
 		$this->sem_fundacao = $sem_fundacao; //	echo date('Y-m-d', strtotime(str_replace('-','/', $museu->getDataFundacao())))."<br>";
 		return $this;
 	}
-
+/*
 	public function getHorarioFuncionamentoAdministrativo() {
 		return $this->horario_funcionamento_administrativo;
 	}
@@ -97,7 +97,7 @@ Class Museu {
 		$this->telefone = $telefone;
 		return $this;
 	}
-
+*/
 	public function getCodCidade() {
 		return $this->cod_cidade;
 	}
@@ -106,7 +106,7 @@ Class Museu {
 		$this->cod_cidade = $cod_cidade;
 		return $this;
 	}
-
+/*
 	public function getEndereco(){
 		return $this->endereco;
 	}
@@ -133,24 +133,27 @@ Class Museu {
 		$this->observacoes = $observacoes;
 		return $this;
 	}
+*/
 
 	//OPERACOES BANCO DE DADOS
 	public function insere()
 	{
-		$query = "INSERT INTO museus(indice, nome, ano_fundacao, sem_fundacao, horario_funcionamento_administrativo, horario_atendimento_publico, telefone, cod_cidade, endereco, situacao, observacoes) 
-			VALUES (:indice, :nome, :ano_fundacao, :sem_fundacao,  :horario_funcionamento_administrativo, :horario_atendimento_publico, :telefone, :cod_cidade, :endereco, :situacao, :observacoes)";
+		//$query = "INSERT INTO museus(indice, nome, ano_fundacao, sem_fundacao, horario_funcionamento_administrativo, horario_atendimento_publico, telefone, cod_cidade, endereco, situacao, observacoes) 
+		//	VALUES (:indice, :nome, :ano_fundacao, :sem_fundacao,  :horario_funcionamento_administrativo, :horario_atendimento_publico, :telefone, :cod_cidade, :endereco, :situacao, :observacoes)";
+		$query = "INSERT INTO museus(indice, nome, ano_fundacao, sem_fundacao, cod_cidade) 
+			VALUES (:indice, :nome, :ano_fundacao, :sem_fundacao,  :cod_cidade)";		
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(':indice',$this->indice);
 		$stmt->bindValue(':nome',$this->nome);
 		$stmt->bindValue(':ano_fundacao',$this->ano_fundacao);
 		$stmt->bindValue(':sem_fundacao',$this->sem_fundacao);
-		$stmt->bindValue(':horario_funcionamento_administrativo',$this->horario_funcionamento_administrativo);
-		$stmt->bindValue(':horario_atendimento_publico',$this->horario_atendimento_publico);
-		$stmt->bindValue(':telefone',$this->telefone);
+		//$stmt->bindValue(':horario_funcionamento_administrativo',$this->horario_funcionamento_administrativo);
+		//$stmt->bindValue(':horario_atendimento_publico',$this->horario_atendimento_publico);
+		//$stmt->bindValue(':telefone',$this->telefone);
 		$stmt->bindValue(':cod_cidade',$this->cod_cidade);
-		$stmt->bindValue(':endereco',$this->endereco);
-		$stmt->bindValue(':situacao',$this->situacao);
-		$stmt->bindValue(':observacoes',$this->observacoes);
+		//$stmt->bindValue(':endereco',$this->endereco);
+		//$stmt->bindValue(':situacao',$this->situacao);
+		//$stmt->bindValue(':observacoes',$this->observacoes);
 
 		if($stmt->execute()){
 			$last_id = $this->conexao->lastInsertId();
@@ -189,6 +192,7 @@ Class Museu {
 
 	public function alterar()
 	{
+		/*
 		$query = "update museus 
 					set indice = :indice,
 					nome = :nome, 
@@ -202,18 +206,26 @@ Class Museu {
 					situacao = :situacao, 
 					observacoes = :observacoes
 				where codigo = :codigo";
+		*/
+		$query = "update museus 
+					set indice = :indice,
+					nome = :nome, 
+					ano_fundacao = :ano_fundacao, 
+					sem_fundacao = :sem_fundacao,
+					cod_cidade = :cod_cidade
+				where codigo = :codigo";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(':indice',$this->indice);
 		$stmt->bindValue(':nome',$this->nome);
 		$stmt->bindValue(':ano_fundacao',$this->ano_fundacao);
 		$stmt->bindValue(':sem_fundacao',$this->sem_fundacao);
-		$stmt->bindValue(':horario_funcionamento_administrativo',$this->horario_funcionamento_administrativo);
-		$stmt->bindValue(':horario_atendimento_publico',$this->horario_atendimento_publico);
-		$stmt->bindValue(':telefone',$this->telefone);
+		//$stmt->bindValue(':horario_funcionamento_administrativo',$this->horario_funcionamento_administrativo);
+		//$stmt->bindValue(':horario_atendimento_publico',$this->horario_atendimento_publico);
+		//$stmt->bindValue(':telefone',$this->telefone);
 		$stmt->bindValue(':cod_cidade',$this->cod_cidade);
-		$stmt->bindValue(':endereco',$this->endereco);
-		$stmt->bindValue(':situacao',$this->situacao);
-		$stmt->bindValue(':observacoes',$this->observacoes);
+		//$stmt->bindValue(':endereco',$this->endereco);
+		//$stmt->bindValue(':situacao',$this->situacao);
+		//$stmt->bindValue(':observacoes',$this->observacoes);
 		$stmt->bindValue(':codigo',$this->codigo);
 
 		if($stmt->execute()){

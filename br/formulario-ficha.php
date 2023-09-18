@@ -4,9 +4,11 @@
   require_once("class/UnidadeContexto.php");
   require_once("class/Categoria.php");
   require_once("class/SubCategoria.php");
-  require_once("class/CategoriaMuseu.php");
+  require_once("class/Ficha.php");
+  require_once("class/ItensFichas.php");
   require_once("class/Tema.php");
   require_once("class/UnidadeAnalise.php");
+  require_once("class/Museu.php");
   
 	$qtd_unidades_analises = 14; // quantidade de páginas, pois , cada unidade de análise será utilizado em uma página
 
@@ -22,8 +24,8 @@
   	}
   }
   
-  if(isset($_GET['museu']) ) {
-  	$museu = $_GET['museu'];
+  if(isset($_GET['ficha']) ) {
+  	$codigo = $_GET['ficha'];
   }
 
   	$ultima_pagina = $qtd_unidades_analises;
@@ -41,7 +43,7 @@
   		$paginaAnterior = $pagina - 1;
   	}
   
-  	//$museu = $_GET['museu'];
+  	//$codigo = $_GET['ficha'];
 	
 	$unidade_analise = new UnidadeAnalise($conexao);
 	$unidade_analise->setCodigo($pagina);
@@ -51,10 +53,18 @@
 	$tema->setCodigo($ua['tema']);
 	$t = $tema->buscar();
 
+	$ficha = new Ficha($conexao);
+	$ficha->setCodigo($codigo);
+	$f = $ficha->buscar();
+
+	$museu = new Museu($conexao);
+	$museu->setCodigo($f['museu']);
+	$m = $museu->buscar();
+
 ?>
         
 	<div class="page-header">
-	  <h1>Cadastro Ficha</h1>
+	  <h1>Cadastro Ficha <?= $f['indice'] ?> - Museu <?= $m['nome'] ?></h1>
 	</div>
 
 			<h2> <?=$t['letra']?> - <?=$t['descricao']?> </h2>
@@ -63,7 +73,7 @@
 
 	<form class="form-horizontal" action="adiciona-categorias-museu.php" method="post">
 
-		<input type="hidden" name="museu" value="<?= $museu ?>" >
+		<input type="hidden" name="ficha" value="<?= $codigo ?>" >
 		<input type="hidden" name="pagina" value="<?= $pagina ?>" >
 
 	<div class="unidades_contextos">
@@ -82,17 +92,17 @@
 		  	$categoria->setUnidadeContexto($uc['codigo']);
 		  	$categorias = $categoria->listarPorUnidadeContexto();
 
-		  	$categoria_museu = new CategoriaMuseu($conexao);
+		  	$itens_fichas = new ItensFichas($conexao);
 			//foreach para listar categorias tipo 1 e 4
 		  	foreach ($categorias as $c) {
 
 				switch ($c['tipo_categoria']) {
 				    case 1: #tipo checkbox
-				    	//verificar se esta categoria já foi gravada para o museu
-				    	$categoria_museu->setMuseu($museu);
-				    	$categoria_museu->setCategoria($c['codigo']);
+				    	//verificar se esta categoria já foi gravada para o ficha
+				    	$itens_fichas->setFicha($codigo);
+				    	$itens_fichas->setCategoria($c['codigo']);
 
-						$categoriaAssinalada = $categoria_museu->buscaCategoriaPorMuseu();
+						$categoriaAssinalada = $itens_fichas->buscaCategoriaPorMuseu();
 						if($categoriaAssinalada){
 						?>
 							<label class="checkbox-inline">
@@ -122,11 +132,11 @@
 					  	$sub_categorias = $sub_categoria->listarPorCategoria();
 					  	foreach ($sub_categorias as $sc) {
 
-					    	//verificar se esta SUBcategoria já foi gravada para o museu
-					    	$categoria_museu->setMuseu($museu);
-					    	$categoria_museu->setSubCategoria($sc['codigo']);
+					    	//verificar se esta SUBcategoria já foi gravada para a ficha selecionada do museu
+					    	$itens_fichas->setFicha($codigo);
+					    	$itens_fichas->setSubCategoria($sc['codigo']);
 
-							$subCategoriaAssinalada = $categoria_museu->buscaSubCategoriaPorMuseu();
+							$subCategoriaAssinalada = $itens_fichas->buscaSubCategoriaPorMuseu();
 							if($subCategoriaAssinalada){
 						?>
 								  <label class="checkbox-inline">
@@ -154,10 +164,10 @@
 				switch ($c['tipo_categoria']) {
 				    case 2: #tipo texto
 				    	//verificar se esta categoria já foi gravada para o museu
-				    	$categoria_museu->setMuseu($museu);
-				    	$categoria_museu->setCategoria($c['codigo']);
+				    	$itens_fichas->setFicha($codigo);
+				    	$itens_fichas->setCategoria($c['codigo']);
 
-						$categoriaTexto = $categoria_museu->buscaCategoriaPorMuseu();
+						$categoriaTexto = $itens_fichas->buscaCategoriaPorMuseu();
 						if($categoriaTexto){ // se esta categoria já foi gravada antes, recuperar texto
 							$texto = $categoriaTexto['texto'];
 							//echo $texto;
@@ -218,7 +228,7 @@
 	<nav>
 	  <ul class="pagination">
 	    <li>
-	      <a href="formulario-ficha.php?museu=<?= $museu?>&pagina=<?= $paginaAnterior?>" aria-label="Previous">
+	      <a href="formulario-ficha.php?ficha=<?= $codigo?>&pagina=<?= $paginaAnterior?>" aria-label="Previous">
 	        <span aria-hidden="true">&laquo;</span>
 	      </a>
 	    </li>
@@ -226,12 +236,12 @@
 	    	//cada página é uma unidade de análise, portanto, pagina = unidade de analise (no contexto deste sistema)
 	    	for ($pag = 1; $pag <= $qtd_unidades_analises; $pag++) {
 	    	?>
-	    		<li class="<?= ($pagina == $pag) ? "active" : "disabled" ?>"><a href="formulario-ficha.php?museu=<?= $museu?>&pagina=<?= $pag?>"><?=$pag?></a></li>
+	    		<li class="<?= ($pagina == $pag) ? "active" : "disabled" ?>"><a href="formulario-ficha.php?ficha=<?= $codigo?>&pagina=<?= $pag?>"><?=$pag?></a></li>
 	    	<?php
 	    	}
 	    ?>
 	    <li>
-	      <a href="formulario-ficha.php?museu=<?= $museu?>&pagina=<?= $proximaPagina?>" aria-label="Next">
+	      <a href="formulario-ficha.php?ficha=<?= $codigo?>&pagina=<?= $proximaPagina?>" aria-label="Next">
 	        <span aria-hidden="true">&raquo;</span>
 	      </a>
 	    </li>

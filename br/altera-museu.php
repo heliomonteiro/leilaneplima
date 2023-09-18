@@ -19,17 +19,17 @@
 	}
 	$museu->setSemFundacao($sem_fundacao);
 
-	$museu->setHorarioFuncionamentoAdministrativo($_POST['horario_funcionamento_administrativo']);
-	$museu->setHorarioAtendimentoPublico($_POST['horario_atendimento_publico']);
+	//$museu->setHorarioFuncionamentoAdministrativo($_POST['horario_funcionamento_administrativo']);
+	//$museu->setHorarioAtendimentoPublico($_POST['horario_atendimento_publico']);
 
-	$museu->setTelefone($_POST['telefone']);
-	$museu->setEndereco($_POST['endereco']);
+	//$museu->setTelefone($_POST['telefone']);
+	//$museu->setEndereco($_POST['endereco']);
 
-	$museu->setSituacao($_POST['situacao']);
+	//$museu->setSituacao($_POST['situacao']);
 
-	$museu->setObservacoes($_POST['observacoes']);
+	//$museu->setObservacoes($_POST['observacoes']);
 
-//var_dump($museu);
+var_dump($museu);
 
 	$retornoAlteracaoMuseu = $museu->alterar(); // array [0]->true ou false, [1]->id inserido
 

@@ -2,29 +2,30 @@
 	require_once 'class/Conecta.php';
 	require_once 'class/Categoria.php';
 	require_once 'class/SubCategoria.php';
-	require_once 'class/CategoriaMuseu.php';
+	require_once 'class/ItensFichas.php';
 	require_once 'class/UnidadeContexto.php';
 	require_once 'class/UnidadeAnalise.php';
 	require_once 'class/Tema.php';
-	require_once 'class/Museu.php';
+	//require_once 'class/Museu.php';
+	require_once 'class/Ficha.php';
 	require_once 'class/TipoCategoria.php';
 
-	$categoria_museu = new CategoriaMuseu($conexao);
+	$itens_fichas = new ItensFichas($conexao);
 	$categoria = new Categoria($conexao);
 	$sub_categoria = new SubCategoria($conexao);
 	$unidade_contexto = new UnidadeContexto($conexao);
 	$unidade_analise = new UnidadeAnalise($conexao);
 	$tema = new Tema($conexao);
-	$museu = new Museu($conexao);
+	$ficha = new ficha($conexao);
 	$tipo_categoria = new TipoCategoria($conexao);
 
 	if(!empty($_POST)){
-		//PARAMETRO MUSEU
-		if(isset($_POST['museu'])) {
-			$museu->setCodigo($_POST['museu']);
-			$m = $museu->buscar();
+		//PARAMETRO ficha
+		if(isset($_POST['ficha'])) {
+			$ficha->setCodigo($_POST['ficha']);
+			$f = $ficha->buscar();
 		} else {
-			echo "não foi informado o <strong>museu</strong>"."<br>";
+			echo "não foi informado o <strong>ficha</strong>"."<br>";
 		}
 		//PARAMETRO PAGINA
 		if(isset($_POST['pagina'])) {
@@ -54,22 +55,21 @@
 						$tema->setCodigo($ua['tema']);
 						$t  = $tema->buscar();
 
-						$categoria_museu->setMuseu($m['codigo']);
-						$categoria_museu->setTema($t['codigo']);
-						$categoria_museu->setUnidadeAnalise($ua['codigo']);
-						$categoria_museu->setUnidadeContexto($uc['codigo']);
-						$categoria_museu->setCategoria($c['codigo']);
+						$itens_fichas->setFicha($f['codigo']);
+						$itens_fichas->setTema($t['codigo']);
+						$itens_fichas->setUnidadeAnalise($ua['codigo']);
+						$itens_fichas->setUnidadeContexto($uc['codigo']);
+						$itens_fichas->setCategoria($c['codigo']);
 						
-						//Confere se esta categoria ja foi inserida para este museu. Se não, insere.
-						$resultadoBusca = $categoria_museu->buscaCategoriaPorMuseu();
+						//Confere se esta categoria ja foi inserida para este ficha. Se não, insere.
+						$resultadoBusca = $itens_fichas->buscaCategoriaPorMuseu();
 						if($resultadoBusca){
 							?>
 								<p class="alert alert-warning" >Categoria "<?= $c['codigo'] ?> - <?= $c['descricao'] ?>" já existe para este Museu!</p>
 							<?php
 						} else {
 							//insere categoria
-							$resultadoInsercao = $categoria_museu->inserirCategoria();
-							var_dump($categoria_museu);
+							$resultadoInsercao = $itens_fichas->inserirCategoria();
 							if($resultadoInsercao) {
 						?>
 
@@ -91,8 +91,8 @@
 			//PEGA CATEGORIAS DESMARCADAS (GRAVADAS NO BANCO DE DADOS, PORÉM NÃO ENVIADAS POR PARAMETRO PARA GRAVAÇÃO)
 			$unidade_analise_atual = $pagina;
 
-			$categoria_museu->setUnidadeAnalise($unidade_analise_atual);
-			$categoriasDaUnidadeDeAnalise = $categoria_museu->buscaCategoriasPorUnidadeDeAnalise();
+			$itens_fichas->setUnidadeAnalise($unidade_analise_atual);
+			$categoriasDaUnidadeDeAnalise = $itens_fichas->buscaCategoriasPorUnidadeDeAnalise();
 
 			$categoriasDesmarcadas = array();
 
@@ -124,12 +124,15 @@
 			}
 
 			foreach ($categoriasDesmarcadas as $cs) {
-					$categoria_museu->setCategoria($cs);
-					$retornoDelecaoCategoria = $categoria_museu->deletaCategoria();
+					$itens_fichas->setCategoria($cs);
+					$retornoDelecaoCategoria = $itens_fichas->deletaCategoria();
+
+					$categoria->setCodigo($cs);
+					$cs2 = $categoria->buscar();
 
 					if($retornoDelecaoCategoria) {
 						?>
-							<p class="alert alert-danger" >Categoria "<?= $cs ?>" desmarcada!</p>
+							<p class="alert alert-danger" >Categoria "<?= $cs2['codigo'] ?> - <?= $cs2['descricao'] ?>" desmarcada!</p>
 						<?php
 					}
 			}
@@ -159,22 +162,22 @@
 				$tema->setCodigo($ua['tema']);
 				$t  = $tema->buscar();
 
-				$categoria_museu->setMuseu($m['codigo']);
-				$categoria_museu->setTema($t['codigo']);
-				$categoria_museu->setUnidadeAnalise($ua['codigo']);
-				$categoria_museu->setUnidadeContexto($uc['codigo']);
-				$categoria_museu->setCategoria($c['codigo']);
-				$categoria_museu->setSubCategoria($sc['codigo']);
+				$itens_fichas->setFicha($f['codigo']);
+				$itens_fichas->setTema($t['codigo']);
+				$itens_fichas->setUnidadeAnalise($ua['codigo']);
+				$itens_fichas->setUnidadeContexto($uc['codigo']);
+				$itens_fichas->setCategoria($c['codigo']);
+				$itens_fichas->setSubCategoria($sc['codigo']);
 				
-				//Confere se esta categoria ja foi inserida para este museu. Se não, insere.
-				$resultadoBusca = $categoria_museu->buscaSubCategoriaPorMuseu();
+				//Confere se esta categoria ja foi inserida para esta ficha. Se não, insere.
+				$resultadoBusca = $itens_fichas->buscaSubCategoriaPorMuseu();
 				if($resultadoBusca){
 					?>
-						<p class="alert alert-warning" >SubCategoria "<?= $sc['codigo'] ?> - <?= $sc['descricao'] ?>" já existe para este Museu!</p>
+						<p class="alert alert-warning" >SubCategoria "<?= $sc['codigo'] ?> - <?= $sc['descricao'] ?>" já existe para esta ficha!</p>
 					<?php
 				} else {
 					//insere subcategoria
-					$resultadoInsercao = $categoria_museu->inserirSubCategoria();
+					$resultadoInsercao = $itens_fichas->inserirSubCategoria();
 					if($resultadoInsercao) {
 				?>
 
@@ -195,8 +198,8 @@
 			//PEGA SUB CATEGORIAS DESMARCADAS (GRAVADAS NO BANCO DE DADOS, PORÉM NÃO ENVIADAS POR PARAMETRO PARA GRAVAÇÃO)
 			$unidade_analise_atual = $pagina;
 
-			$categoria_museu->setUnidadeAnalise($unidade_analise_atual);
-			$subCategoriasDaUnidadeDeAnalise = $categoria_museu->listarSubCategoriasPorUnidadeDeAnalise();
+			$itens_fichas->setUnidadeAnalise($unidade_analise_atual);
+			$subCategoriasDaUnidadeDeAnalise = $itens_fichas->listarSubCategoriasPorUnidadeDeAnalise();
 
 			$subCategoriasDesmarcadas = array();
 
@@ -224,8 +227,8 @@
 
 			foreach ($subCategoriasDesmarcadas as $scs) {
 
-					$categoria_museu->setSubCategoria($scs);
-					$retornoDelecaoSubCategoria = $categoria_museu->deletaSubCategoria();
+					$itens_fichas->setSubCategoria($scs);
+					$retornoDelecaoSubCategoria = $itens_fichas->deletaSubCategoria();
 
 					if($retornoDelecaoSubCategoria) {
 					?>
@@ -266,24 +269,24 @@
 				$tema->setCodigo($ua['tema']);
 				$t  = $tema->buscar();
 
-				$categoria_museu->setMuseu($m['codigo']);
-				$categoria_museu->setTema($t['codigo']);
-				$categoria_museu->setUnidadeAnalise($ua['codigo']);
-				$categoria_museu->setUnidadeContexto($uc['codigo']);
-				$categoria_museu->setCategoria($c['codigo']);
+				$itens_fichas->setFicha($f['codigo']);
+				$itens_fichas->setTema($t['codigo']);
+				$itens_fichas->setUnidadeAnalise($ua['codigo']);
+				$itens_fichas->setUnidadeContexto($uc['codigo']);
+				$itens_fichas->setCategoria($c['codigo']);
 
 				//INSERE CATEGORIA
-				//INSERE CATEGORIA_MUSEU DAS CATEGORIAS TIPO TEXTO
-				//Confere se esta categoria ja foi inserida para este museu. Se não, insere.
-				$resultadoBusca = $categoria_museu->buscaCategoriaPorMuseu();
+				//INSERE ITENS FICHAS DAS CATEGORIAS TIPO TEXTO
+				//Confere se esta categoria ja foi inserida para esta ficha. Se não, insere.
+				$resultadoBusca = $itens_fichas->buscaCategoriaPorMuseu();
 
 				if($resultadoBusca){
 					?>
-						<p class="alert alert-warning" >Categoria "<?= $c['codigo'] ?> - <?= $c['descricao'] ?>" já existe para este Museu e foi alterada!</p>
+						<p class="alert alert-warning" >Categoria "<?= $c['codigo'] ?> - <?= $c['descricao'] ?>" já existe para esta Ficha e foi alterada!</p>
 					<?php
 				} else {
 					//insere categoria
-					$resultadoInsercao = $categoria_museu->inserirCategoria();
+					$resultadoInsercao = $itens_fichas->inserirCategoria();
 					if($resultadoInsercao) {
 					?>
 						<p class="alert alert-success" >Categoria "<?= $c['codigo'] ?> - <?= $c['descricao'] ?>" adicionado com sucesso!</p>
@@ -299,16 +302,16 @@
 
 				//ATUALIZA TEXTO CATEGORIA
 				//INSERE TEXTO NA CATEGORIA MUSEU
-				$categoria_museu->setTexto($ct[$indice]);
+				$itens_fichas->setTexto($ct[$indice]);
 
-				$resultado_alteracao = $categoria_museu->alterarCategoriaTexto();
+				$resultado_alteracao = $itens_fichas->alterarCategoriaTexto();
 				if($resultado_alteracao){
 				?>
-					<p class="alert alert-success" >Categoria "<?= $c['codigo'] ?> - <?= $c['descricao'] ?> - texto: <?= $categoria_museu->getTexto() ?>" alterado com sucesso!</p>
+					<p class="alert alert-success" >Categoria "<?= $c['codigo'] ?> - <?= $c['descricao'] ?> - texto: <?= $itens_fichas->getTexto() ?>" alterado com sucesso!</p>
 				<?php
 				} else {
 				?>
-					<p class="alert alert-danger" >Categoria "<?= $c['codigo'] ?> - <?= $c['descricao'] ?> - texto: <?= $categoria_museu->getTexto() ?>" não foi alterada!</p>
+					<p class="alert alert-danger" >Categoria "<?= $c['codigo'] ?> - <?= $c['descricao'] ?> - texto: <?= $itens_fichas->getTexto() ?>" não foi alterada!</p>
 				<?php
 				}
 
@@ -330,7 +333,7 @@
 <?php if($pagina == 14){ ?>
     <li class="next"><a href="listagem-museus.php">Finalizar <span aria-hidden="true">&rarr;</span></a></li>
 <?php }	else { ?>
-    <li class="next"><a href="formulario-ficha.php?museu=<?= $m['codigo'] ?>&pagina=<?= $proximaPagina?>">Próximo <span aria-hidden="true">&rarr;</span></a></li>
+    <li class="next"><a href="formulario-ficha.php?ficha=<?= $f['codigo'] ?>&pagina=<?= $proximaPagina?>">Próximo <span aria-hidden="true">&rarr;</span></a></li>
 <?php } ?>
   </ul>
 </nav>

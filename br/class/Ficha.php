@@ -203,6 +203,15 @@ Class Ficha {
 
 	}
 
+	public function listarPorMuseu()
+	{
+		$query = "select codigo, indice from fichas where museu = :museu order by indice";
+		$stmt = $this->conexao->prepare($query);
+		$stmt->bindValue(":museu",$this->museu);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 	public function buscar()
 	{
 		$query = "select * from fichas where codigo = :codigo";

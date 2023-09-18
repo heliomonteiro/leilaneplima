@@ -10,28 +10,26 @@
 	  require_once 'class/Categoria.php';
 	  require_once 'class/SubCategoria.php';
 	  require_once 'class/ImagensMuseus.php';
-?>
-
-        <div>
-          <h1 class="impressao">Informações pesquisadas sobre o Museu</h1>
-        </div>
-
-<?php
 
 	$museu = new Museu($conexao);
 	$ficha = new Ficha($conexao);
 	$cidade = new Cidade($conexao);
 
-	$museu->setCodigo($_GET['codigo']);
-	$m = $museu->buscar();
-
 	$ficha->setCodigo($_GET['codigo']);
 	$f = $ficha->buscar();
+
+
+	$museu->setCodigo($f['museu']);
+	$m = $museu->buscar();
 
 	$cidade->setCodCidade($m['cod_cidade']);
 	$c = $cidade->buscaCidade();
 
 ?>
+
+	<div>
+		<h1>Informações pesquisadas sobre o <?= $m['nome'] ?> - Ficha <?= $f['indice'] ?></h1>
+    </div>
 
 	<table class="table">
 		<tr>

@@ -18,15 +18,15 @@
 	}
 	$museu->setSemFundacao($sem_fundacao);
 	
-	$museu->setHorarioFuncionamentoAdministrativo($_GET['horario_funcionamento_administrativo']);
-	$museu->setHorarioAtendimentoPublico($_GET['horario_atendimento_publico']);
+	//$museu->setHorarioFuncionamentoAdministrativo($_GET['horario_funcionamento_administrativo']);
+	//$museu->setHorarioAtendimentoPublico($_GET['horario_atendimento_publico']);
 
-	$museu->setTelefone($_GET['telefone']);
-	$museu->setEndereco($_GET['endereco']);
+	//$museu->setTelefone($_GET['telefone']);
+	//$museu->setEndereco($_GET['endereco']);
 
-	$museu->setSituacao($_GET['situacao']);
+	//$museu->setSituacao($_GET['situacao']);
 
-	$museu->setObservacoes($_GET['observacoes']);
+	//$museu->setObservacoes($_GET['observacoes']);
 
 	$retornoInsercaoMuseu = $museu->insere(); // array [0]->true ou false, [1]->id inserido
 
