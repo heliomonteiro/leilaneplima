@@ -61,17 +61,104 @@
 	$museu->setCodigo($f['museu']);
 	$m = $museu->buscar();
 
+	$ficha_anterior = new Ficha($conexao);
+	$ficha_anterior->setMuseu($m);
+	$ficha_anterior->setCodigo($codigo);
+	$f_anterior = $ficha_anterior->buscarAnterior();
+
+	//var_dump($f_anterior);
+
 ?>
         
 	<div class="page-header">
 	  <h1>Cadastro Ficha <?= $f['indice'] ?> - Museu <?= $m['nome'] ?></h1>
 	</div>
 
-			<h2> <?=$t['letra']?> - <?=$t['descricao']?> </h2>
+	<h2> <?=$t['letra']?> - <?=$t['descricao']?> </h2>
 
-	<h3> <?=$ua['num_romano']?> - <?=$ua['descricao']?> </h3>
 
 	<form class="form-horizontal" action="adiciona-categorias-museu.php" method="post">
+
+	<?php
+		if($pagina == 1) { //echo 'Aqui';		// formulario ficha - apenas na primeira pagina
+	?>
+
+		<input type="hidden" id="museu" name="museu" value="<?= $f['museu'] ?>">
+
+		<div class="form-group">
+		  <label for="indice" class="col-sm-2 control-label">índice</label>
+		  <div class="col-sm-10">
+			<input type="number" class="form-control" id="indice" name="indice" value="<?= $f['indice'] ?>">
+		  </div>
+		</div>
+
+		<div class="form-group">
+		  <label for="horario_funcionamento_administrativo" class="col-sm-2 control-label">Horário do atendimento administrativo</label>
+		  <div class="col-sm-10">
+			<input type="text" class="form-control" id="horario_funcionamento_administrativo" name="horario_funcionamento_administrativo" value="<?= $f['horario_funcionamento_administrativo'] ?>">
+		  </div>
+		</div>
+
+		<div class="form-group">
+		  <label for="horario_atendimento_publico" class="col-sm-2 control-label">Horário de atendimento ao público</label>
+		  <div class="col-sm-10">
+			<input type="text" class="form-control" id="horario_atendimento_publico" name="horario_atendimento_publico" value="<?= $f['horario_atendimento_publico'] ?>">
+		  </div>
+		</div>
+
+		<div class="form-group">
+		  <label for="telefone" class="col-sm-2 control-label">Telefone</label>
+		  <div class="col-sm-10">
+			<input type="text" class="form-control" id="telefone" name="telefone" value="<?= $f['telefone'] ?>">
+		  </div>
+		</div>
+
+		<div class="form-group">
+		  <label for="endereco" class="col-sm-2 control-label">Endereço</label>
+		  <div class="col-sm-10">
+			<input type="text" class="form-control" id="endereco" name="endereco" value="<?= $f['endereco'] ?>">
+		  </div>
+		</div>
+
+		<div class="form-group">
+		  <label for="situacao" class="col-sm-2 control-label">Situação</label>
+		  <div class="col-sm-10">
+			<select class="form-control" name="situacao" id="situacao" />
+			  <option value="1" <?= ($f['situacao'] == 1) ? 'selected' : ''?> >Ativo</option>
+			  <option value="2" <?= ($f['situacao'] == 2) ? 'selected' : ''?> >Inativo</option>
+			</select>
+		  </div>
+		</div>
+
+		<div class="form-group">
+            <label for="observacoes" class="col-sm-2 control-label">Observações:</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" id="observacoes" name="observacoes" rows="5"><?= $f['observacoes'] ?></textarea>
+            </div>
+        </div>
+
+		<div class="form-group">
+		  <label for="visita_tecnica" class="col-sm-2 control-label">Data da visita técnica:</label>
+		  <div class="col-sm-10">
+			<input type="date" class="form-control" id="visita_tecnica" name="visita_tecnica" value="<?= $f['visita_tecnica'] ?>">
+		  </div>
+		</div>
+
+		<div class="form-group">
+		  <label for="revisitacao" class="col-sm-2 control-label">Revisitação</label>
+		  <div class="col-sm-10">
+			<select class="form-control" name="revisitacao" id="revisitacao" />
+			  <option value="1" <?= ($f['revisitacao'] == 1) ? 'selected' : ''?> >Visita Técnica</option>
+			  <option value="2" <?= ($f['revisitacao'] == 2) ? 'selected' : ''?> >Revisitação</option>
+			</select>
+		  </div>
+		</div>
+
+	<?php	
+		}; //fim formlario ficha
+	?>
+
+	<h3> <?=$ua['num_romano']?> - <?=$ua['descricao']?> </h3>
 
 		<input type="hidden" name="ficha" value="<?= $codigo ?>" >
 		<input type="hidden" name="pagina" value="<?= $pagina ?>" >
@@ -93,7 +180,8 @@
 		  	$categorias = $categoria->listarPorUnidadeContexto();
 
 		  	$itens_fichas = new ItensFichas($conexao);
-			//foreach para listar categorias tipo 1 e 4
+			$itens_fichas_anterior = new ItensFichas($conexao);
+			//foreach para listar categorias tipo 1 (checkboxes) e 4 (subcategorias)
 		  	foreach ($categorias as $c) {
 
 				switch ($c['tipo_categoria']) {
@@ -101,15 +189,30 @@
 				    	//verificar se esta categoria já foi gravada para o ficha
 				    	$itens_fichas->setFicha($codigo);
 				    	$itens_fichas->setCategoria($c['codigo']);
+						$itens_fichas_anterior->setFicha($f_anterior['codigo']);
+				    	$itens_fichas_anterior->setCategoria($c['codigo']);
 
 						$categoriaAssinalada = $itens_fichas->buscaCategoriaPorMuseu();
+						$categoriaAssinaladaFichaAnterior = $itens_fichas_anterior->buscaCategoriaPorMuseu();
+
+						//var_dump($categoriaAssinaladaFichaAnterior['categoria']); // categoria anterior
+
 						if($categoriaAssinalada){
-						?>
-							<label class="checkbox-inline">
-						    	<input type="checkbox" name="categoria[]" value="<?= $c['codigo'] ?>" checked>
-						   			<?= $c['descricao'] ?>
-						 	</label>
-						<?php
+							if($categoriaAssinaladaFichaAnterior){
+							?>
+								<label class="checkbox-inline">
+									<input type="checkbox" name="categoria[]" value="<?= $c['codigo'] ?>" checked>
+										<?= $c['descricao'] ?>
+								</label>
+							<?php
+							} else { // (NOVO))
+							?>
+								<label class="checkbox-inline">
+									<input type="checkbox" name="categoria[]" value="<?= $c['codigo'] ?>" checked>
+										<span class="glyphicon glyphicon-ok"><?= $c['descricao'] ?></span>
+								</label>
+							<?php
+							}
 						} else { // caso categoria não esteja assinalada será criado checkbox sem 'checked'
 				    ?>
 						  <label class="checkbox-inline">

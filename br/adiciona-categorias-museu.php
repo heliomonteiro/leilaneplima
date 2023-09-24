@@ -16,8 +16,11 @@
 	$unidade_contexto = new UnidadeContexto($conexao);
 	$unidade_analise = new UnidadeAnalise($conexao);
 	$tema = new Tema($conexao);
-	$ficha = new ficha($conexao);
+	$ficha = new Ficha($conexao);
 	$tipo_categoria = new TipoCategoria($conexao);
+
+
+	//var_dump($_POST);
 
 	if(!empty($_POST)){
 		//PARAMETRO ficha
@@ -35,6 +38,51 @@
 		} else {
 			echo "não foi informado a <strong>pagina/unidade de analise</strong>"."<br>";
 		}
+
+	if(isset($_POST['museu'])) {
+		$ficha->setIndice($_POST['indice']);
+
+		$ficha->setHorarioFuncionamentoAdministrativo($_POST['horario_funcionamento_administrativo']);
+		$ficha->setHorarioAtendimentoPublico($_POST['horario_atendimento_publico']);
+
+		$ficha->setTelefone($_POST['telefone']);
+		$ficha->setEndereco($_POST['endereco']);
+
+		$ficha->setSituacao($_POST['situacao']);
+		$ficha->setVisitaTecnica($_POST['visita_tecnica']);
+		$ficha->setRevisitacao($_POST['revisitacao']);
+
+		$ficha->setObservacoes($_POST['observacoes']);
+
+		$ficha->setMuseu($_POST['museu']);
+		$ficha->setCodigo($_POST['ficha']);
+
+
+	$retornoAlteracaoFicha = $ficha->alterar(); // array [0]->true ou false, [1]->id inserido
+
+		var_dump($retornoAlteracaoFicha);
+
+	if($retornoAlteracaoFicha[0]) {
+	?>
+
+		<p class="alert alert-success" >Ficha <?php echo $ficha->getIndice(); ?> alterado com sucesso!</p>
+
+	<?php 
+		} else {
+	?>
+
+		<p class="alert alert-danger" >Ficha <?php echo $ficha->getIndice(); ?> não foi alterado!</p>
+
+	<?php
+	}
+
+	} else {
+		echo "não foi informado o <strong>museu</strong>"."<br>";
+	}
+	//echo '<br>';
+	//	var_dump($ficha);
+
+
 		//PARAMETRO CATEGORIAS
 		if(isset($_POST['categoria'])) {
 			//PERCORRE CATEGORIAS E GRAVA

@@ -195,6 +195,28 @@ Class Ficha {
 			
 	}
 
+	//OPERACOES BANCO DE DADOS
+	public function insereVazio()
+	{
+		$query = "INSERT INTO fichas(indice, telefone, endereco, situacao, observacoes,museu) 
+			VALUES (:indice, '', '', 2, '', :museu)";
+		$stmt = $this->conexao->prepare($query);
+		$stmt->bindValue(':indice',$this->indice);
+		$stmt->bindValue(':museu',$this->museu);
+
+
+		var_dump($this->indice); echo '<br><br>';
+		var_dump($this->museu); echo '<br><br>';
+		var_dump($stmt);
+
+		if($stmt->execute()){
+			$last_id = $this->conexao->lastInsertId();
+   			$last_id;
+			return array(true,$last_id);
+		}
+			
+	}
+
 	public function listar()
 	{
 		$query = "select * from fichas order by indice";
@@ -216,6 +238,16 @@ Class Ficha {
 	{
 		$query = "select * from fichas where codigo = :codigo";
 		$stmt = $this->conexao->prepare($query);
+		$stmt->bindValue(":codigo",$this->codigo);
+		$stmt->execute();
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
+	public function buscarAnterior()
+	{
+		$query = "select * from fichas where museu = :museu and indice < (select indice from fichas where codigo = :codigo) order by indice desc limit 1";
+		$stmt = $this->conexao->prepare($query);
+		$stmt->bindValue(":museu",$this->museu['codigo']);
 		$stmt->bindValue(":codigo",$this->codigo);
 		$stmt->execute();
 		return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -248,7 +280,7 @@ Class Ficha {
 					observacoes = :observacoes
 				where codigo = :codigo";
 */
-		$query = "update museus 
+		$query = "update fichas 
 			set indice = :indice,
 				horario_funcionamento_administrativo = :horario_funcionamento_administrativo, 
 				horario_atendimento_publico = :horario_atendimento_publico, 
@@ -257,8 +289,7 @@ Class Ficha {
 				situacao = :situacao, 
 				observacoes = :observacoes,
 				revisitacao = :revisitacao,
-				visita_tecnica = :visita_tecnica,
-				museu = :museu
+				visita_tecnica = :visita_tecnica
 			where codigo = :codigo";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(':indice',$this->indice);
@@ -272,10 +303,9 @@ Class Ficha {
 		$stmt->bindValue(':endereco',$this->endereco);
 		$stmt->bindValue(':situacao',$this->situacao);
 		$stmt->bindValue(':observacoes',$this->observacoes);
-		$stmt->bindValue(':codigo',$this->codigo);
 		$stmt->bindValue(':revisitacao',$this->revisitacao);
 		$stmt->bindValue(':visita_tecnica',$this->visita_tecnica);
-		$stmt->bindValue(':museu',$this->museu);
+		$stmt->bindValue(':codigo',$this->codigo);
 
 		if($stmt->execute()){
 			$last_id = $this->conexao->lastInsertId();
@@ -283,6 +313,15 @@ Class Ficha {
 			return array(true,$last_id);
 		}
 			
+	}
+
+	public function buscarUltimoIndice()
+	{
+		$query = "select max(indice) as ultima_ficha from fichas where museu = :museu";
+		$stmt = $this->conexao->prepare($query);
+		$stmt->bindValue(":museu",$this->museu);
+		$stmt->execute();
+		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
 }

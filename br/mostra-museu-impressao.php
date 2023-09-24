@@ -27,9 +27,9 @@
 
 ?>
 
-	<div>
-		<h1>Informações pesquisadas sobre o <?= $m['nome'] ?> - Ficha <?= $f['indice'] ?></h1>
-    </div>
+	<div class="page-header">
+		<h1>Informações pesquisadas sobre <small><?= $m['nome'] ?></small> <span class="badge badge-info">Ficha <?= $f['indice'] ?></span></h1>
+	</div>
 
 	<table class="table">
 		<tr>
@@ -66,12 +66,18 @@
 		</tr>
 		<tr>
 			<th>Situação</th>
-			<td><?= $f['situacao'] == (1) ? "Ativo" : "Inativo" ; ?> </td>
+			<td><span class="badge badge-info"><?= $f['situacao'] == (1) ? "Ativo" : "Inativo" ; ?></span></td>
 		</tr>
 		<tr>
 			<th>Observações</th>
 			<td class="text-justify"><?= $f['observacoes']?></td>
 		</tr>
+		<tr>
+		<th>Revisitação</th>
+			<td class="text-justify"><span class="badge badge-info"><?= ($f['revisitacao']) ? 'Revisitação' : 'Visita Técnica'?></span></td>
+		</tr>
+		<th>Data da Visita Técnica</th>
+		<td class="text-justify"><?= Date('d/m/y', strtotime ($f['visita_tecnica']))?></td>
 	</table>
 
 <?php

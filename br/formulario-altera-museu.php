@@ -162,14 +162,14 @@
               </select>
             </div>
           </div>
-
+                      -->
           <div class="form-group">
-            <label for="observacoes" class="col-sm-2 control-label">Observações</label>
+            <label for="periodo_pandemico" class="col-sm-2 control-label">Período Pandêmico:</label>
             <div class="col-sm-10">
-              <textarea class="form-control" id="observacoes" name="observacoes" rows="5"><?= $m['observacoes'] ?></textarea>
+              <textarea class="form-control" id="periodo_pandemico" name="periodo_pandemico" rows="5"><?= $m['periodo_pandemico'] ?></textarea>
             </div>
           </div>
-                      -->
+
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <button type="submit" class="btn btn-default">Salvar</button>

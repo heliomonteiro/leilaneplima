@@ -105,14 +105,14 @@
               </select>
             </div>
           </div>
-
+                -->
           <div class="form-group">
-            <label for="observacoes" class="col-sm-2 control-label">Observações</label>
+            <label for="periodo_pandemico" class="col-sm-2 control-label">Período Pandêmico:</label>
             <div class="col-sm-10">
-              <textarea class="form-control" id="observacoes" name="observacoes"></textarea>
+              <textarea class="form-control" id="periodo_pandemico" name="periodo_pandemico"></textarea>
             </div>
           </div>
-                -->
+                
         </fieldset>
 
           <div class="form-group">

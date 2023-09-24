@@ -27,6 +27,7 @@
 	//$museu->setSituacao($_GET['situacao']);
 
 	//$museu->setObservacoes($_GET['observacoes']);
+	$museu->setPeriodoPandemico($_GET['periodo_pandemico']);
 
 	$retornoInsercaoMuseu = $museu->insere(); // array [0]->true ou false, [1]->id inserido
 

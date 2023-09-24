@@ -16,6 +16,7 @@ Class Museu {
 	//private $endereco;
 	//private $situacao;
 	//private $observacoes;
+	private $periodo_pandemico;
 
 	//CONEXAO
 	public function __construct(\PDO $conexao)
@@ -134,14 +135,22 @@ Class Museu {
 		return $this;
 	}
 */
+	public function getPeriodoPandemico(){
+		return $this->periodo_pandemico;
+	}
+
+	public function setPeriodoPandemico($periodo_pandemico){
+		$this->periodo_pandemico = $periodo_pandemico;
+		return $this;
+	}
 
 	//OPERACOES BANCO DE DADOS
 	public function insere()
 	{
 		//$query = "INSERT INTO museus(indice, nome, ano_fundacao, sem_fundacao, horario_funcionamento_administrativo, horario_atendimento_publico, telefone, cod_cidade, endereco, situacao, observacoes) 
 		//	VALUES (:indice, :nome, :ano_fundacao, :sem_fundacao,  :horario_funcionamento_administrativo, :horario_atendimento_publico, :telefone, :cod_cidade, :endereco, :situacao, :observacoes)";
-		$query = "INSERT INTO museus(indice, nome, ano_fundacao, sem_fundacao, cod_cidade) 
-			VALUES (:indice, :nome, :ano_fundacao, :sem_fundacao,  :cod_cidade)";		
+		$query = "INSERT INTO museus(indice, nome, ano_fundacao, sem_fundacao, cod_cidade, periodo_pandemico) 
+			VALUES (:indice, :nome, :ano_fundacao, :sem_fundacao,  :cod_cidade, :periodo_pandemico)";		
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(':indice',$this->indice);
 		$stmt->bindValue(':nome',$this->nome);
@@ -154,6 +163,7 @@ Class Museu {
 		//$stmt->bindValue(':endereco',$this->endereco);
 		//$stmt->bindValue(':situacao',$this->situacao);
 		//$stmt->bindValue(':observacoes',$this->observacoes);
+		$stmt->bindValue(':observacoes',$this->periodo_pandemico);
 
 		if($stmt->execute()){
 			$last_id = $this->conexao->lastInsertId();
@@ -212,7 +222,8 @@ Class Museu {
 					nome = :nome, 
 					ano_fundacao = :ano_fundacao, 
 					sem_fundacao = :sem_fundacao,
-					cod_cidade = :cod_cidade
+					cod_cidade = :cod_cidade, 
+					periodo_pandemico = :periodo_pandemico
 				where codigo = :codigo";
 		$stmt = $this->conexao->prepare($query);
 		$stmt->bindValue(':indice',$this->indice);
@@ -226,6 +237,7 @@ Class Museu {
 		//$stmt->bindValue(':endereco',$this->endereco);
 		//$stmt->bindValue(':situacao',$this->situacao);
 		//$stmt->bindValue(':observacoes',$this->observacoes);
+		$stmt->bindValue(':periodo_pandemico',$this->periodo_pandemico);
 		$stmt->bindValue(':codigo',$this->codigo);
 
 		if($stmt->execute()){

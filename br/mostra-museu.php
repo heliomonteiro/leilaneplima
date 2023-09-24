@@ -25,10 +25,14 @@
 	$c = $cidade->buscaCidade();
 
 ?>
-        <div class="page-header">
-          <h1>Informações pesquisadas sobre o <?= $m['nome'] ?> - Ficha <?= $f['indice'] ?></h1>
-        </div>
 
+	<div class="page-header">
+		<h1>Informações pesquisadas sobre <small><?= $m['nome'] ?></small> <span class="badge badge-info">Ficha <?= $f['indice'] ?></span></h1>
+	</div>
+
+	<div class="page-header">
+		<h1>Museu</h1>
+	</div>
 	<table class="table table-striped">
 		<tr>
 			<th>Código</th>
@@ -43,6 +47,19 @@
 			<td><?= $m['ano_fundacao']?></td>
 		</tr>
 		<tr>
+			<th>Cidade</th>
+			<td><?= $c['nome']?></td>
+		</tr>
+		<tr>
+			<th>Período Pandêmico</th>
+			<td><?= $m['periodo_pandemico']?></td>
+		</tr>
+	</table>
+	<div class="page-header">
+		<h1>Ficha</h1>
+	</div>
+	<table class="table table-striped">
+		<tr>
 			<th>Atendimento Administrativo</th>
 			<td><?= $f['horario_funcionamento_administrativo']?></td>
 		</tr>
@@ -55,20 +72,24 @@
 			<td><?= $f['telefone']?></td>
 		</tr>
 		<tr>
-			<th>Cidade</th>
-			<td><?= $c['nome']?></td>
-		</tr>
-		<tr>
 			<th>Endereço</th>
 			<td><?= $f['endereco']?></td>
 		</tr>
 		<tr>
 			<th>Situação</th>
-			<td><?= $f['situacao'] == (1) ? "Ativo" : "Inativo" ; ?> </td>
+			<td><span class="badge badge-info"><?= $f['situacao'] == (1) ? "Ativo" : "Inativo" ; ?></span></td>
 		</tr>
 		<tr>
 			<th>Observações</th>
 			<td class="text-justify"><?= $f['observacoes']?></td>
+		</tr>
+		<tr>
+			<th>Revisitação</th>
+			<td class="text-justify"><span class="badge badge-info"><?= ($f['revisitacao']) ? 'Revisitação' : 'Visita Técnica'?></span></td>
+		</tr>
+		<tr>
+			<th>Data da Visita Técnica</th>
+			<td class="text-justify"><?= Date('d/m/y', strtotime ($f['visita_tecnica']))?></td>
 		</tr>
 	</table>
 

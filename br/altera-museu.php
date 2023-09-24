@@ -8,6 +8,7 @@
 	$museu->setNome($_POST['nome']);
 	$museu->setCodCidade($_POST['cod_cidade']);
 	$museu->setAnoFundacao($_POST['ano_fundacao']);
+	$museu->setPeriodoPandemico($_POST['periodo_pandemico']);
 
 	if(isset($_POST['sem_fundacao']))
 	{
@@ -29,7 +30,7 @@
 
 	//$museu->setObservacoes($_POST['observacoes']);
 
-var_dump($museu);
+	//var_dump($museu);
 
 	$retornoAlteracaoMuseu = $museu->alterar(); // array [0]->true ou false, [1]->id inserido
 
