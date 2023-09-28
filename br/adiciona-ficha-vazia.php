@@ -28,6 +28,11 @@
 	<p class="alert alert-danger" >Ficha <?php echo $ficha->getIndice(); ?> não foi adicionado!</p>
 
 <?php
+
+//redireciona devolta
+$URL_ATUAL= "http://$_SERVER[HTTP_HOST]/Museus/br/listagem-museus.php";
+header("location: $URL_ATUAL");
+
 }
 include("rodape.php");
 ?>

@@ -66,6 +66,7 @@
 					echo('<a href="formulario-ficha.php?ficha='.$f['codigo'].'" title="Preencher ficha do museu '.$f['indice'].' do museu"><span class="badge">'.$f['indice'].'</span></a>');
 				}
 				?>
+				<a href="adiciona-ficha-vazia.php?museu=<?=$m['codigo']?>" title="Nova Ficha Vazia"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 				<span class="glyphicon glyphicon-edit text-info" aria-hidden="true"></span>
 			</td>
 			<!-- mostrar fichas -->
