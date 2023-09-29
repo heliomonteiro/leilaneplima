@@ -66,7 +66,7 @@
 	$ficha_anterior->setCodigo($codigo);
 	$f_anterior = $ficha_anterior->buscarAnterior();
 
-	//var_dump($f_anterior);
+	if(!$f_anterior) { var_dump($f_anterior); }
 
 ?>
         
@@ -184,16 +184,25 @@
 			//foreach para listar categorias tipo 1 (checkboxes) e 4 (subcategorias)
 		  	foreach ($categorias as $c) {
 
+				$categoriaAssinaladaFichaAnterior = null;
+
 				switch ($c['tipo_categoria']) {
 				    case 1: #tipo checkbox
 				    	//verificar se esta categoria já foi gravada para o ficha
 				    	$itens_fichas->setFicha($codigo);
 				    	$itens_fichas->setCategoria($c['codigo']);
-						$itens_fichas_anterior->setFicha($f_anterior['codigo']);
-				    	$itens_fichas_anterior->setCategoria($c['codigo']);
+						if($itens_fichas_anterior){
+							if($f_anterior){
+								$itens_fichas_anterior->setFicha($f_anterior['codigo']);
+								$itens_fichas_anterior->setCategoria($c['codigo']);
+								
+								$categoriaAssinaladaFichaAnterior = $itens_fichas_anterior->buscaCategoriaPorMuseu();								
+							}
 
+						}
+						
 						$categoriaAssinalada = $itens_fichas->buscaCategoriaPorMuseu();
-						$categoriaAssinaladaFichaAnterior = $itens_fichas_anterior->buscaCategoriaPorMuseu();
+
 
 						//var_dump($categoriaAssinaladaFichaAnterior['categoria']); // categoria anterior
 
