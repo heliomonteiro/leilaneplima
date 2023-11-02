@@ -57,6 +57,8 @@
 	$ficha->setCodigo($codigo);
 	$f = $ficha->buscar();
 
+	var_dump($f['codigo']); echo '<br><br>';
+
 	$museu = new Museu($conexao);
 	$museu->setCodigo($f['museu']);
 	$m = $museu->buscar();
@@ -66,7 +68,10 @@
 	$ficha_anterior->setCodigo($codigo);
 	$f_anterior = $ficha_anterior->buscarAnterior();
 
-	if(!$f_anterior) { var_dump($f_anterior); }
+	//echo 'ficha anterior: '. $f_anterior['codigo']. '<br>';
+
+	$teste = (!empty($f_anterior)) ? $f_anterior['codigo'] : 0;
+	echo "ficha anterior: $teste <br>";
 
 ?>
         
@@ -191,44 +196,50 @@
 				    	//verificar se esta categoria já foi gravada para o ficha
 				    	$itens_fichas->setFicha($codigo);
 				    	$itens_fichas->setCategoria($c['codigo']);
-						if($itens_fichas_anterior){
-							if($f_anterior){
-								$itens_fichas_anterior->setFicha($f_anterior['codigo']);
-								$itens_fichas_anterior->setCategoria($c['codigo']);
-								
-								$categoriaAssinaladaFichaAnterior = $itens_fichas_anterior->buscaCategoriaPorMuseu();								
-							}
 
-						}
-						
 						$categoriaAssinalada = $itens_fichas->buscaCategoriaPorMuseu();
 
+						if($f_anterior){
+							$itens_fichas_anterior->setFicha($f_anterior['codigo']);
+							$itens_fichas_anterior->setCategoria($c['codigo']);
+							
+							$categoriaAssinaladaFichaAnterior = $itens_fichas_anterior->buscaCategoriaPorMuseu();								
+						}
 
 						//var_dump($categoriaAssinaladaFichaAnterior['categoria']); // categoria anterior
 
 						if($categoriaAssinalada){
-							if($categoriaAssinaladaFichaAnterior){
+							if($f_anterior && !$categoriaAssinaladaFichaAnterior){ // (NOVO)
 							?>
-								<label class="checkbox-inline">
+								<label class="checkbox-inline text-success">
 									<input type="checkbox" name="categoria[]" value="<?= $c['codigo'] ?>" checked>
-										<?= $c['descricao'] ?>
+									<?= $c['descricao'] ?> <i class="fa-solid fa-circle-check" style="color: #005000;"></i>
 								</label>
 							<?php
-							} else { // (NOVO))
+							} else { 
 							?>
 								<label class="checkbox-inline">
 									<input type="checkbox" name="categoria[]" value="<?= $c['codigo'] ?>" checked>
-										<span class="glyphicon glyphicon-ok"><?= $c['descricao'] ?></span>
+									<?= $c['descricao'] ?>
 								</label>
 							<?php
 							}
 						} else { // caso categoria não esteja assinalada será criado checkbox sem 'checked'
-				    ?>
-						  <label class="checkbox-inline">
-						    <input type="checkbox" name="categoria[]" value="<?= $c['codigo'] ?>">
-						   		<?= $c['descricao'] ?>
-						  </label>
-					<?php
+							if($f_anterior && $categoriaAssinaladaFichaAnterior){ // (REMOVIDO)
+							?>
+								<label class="checkbox-inline text-danger">
+									<input type="checkbox" name="categoria[]" value="<?= $c['codigo'] ?>">
+									<?= $c['descricao'] ?> <i class="fa-solid fa-circle-xmark" style="color: #be0000;"></i>
+								</label>
+							<?php
+							} else {
+							?>
+								<label class="checkbox-inline">
+									<input type="checkbox" name="categoria[]" value="<?= $c['codigo'] ?>">
+									<?= $c['descricao'] ?>
+								</label>
+							<?php
+							}
 						}
 				        break;
 
@@ -249,20 +260,46 @@
 					    	$itens_fichas->setSubCategoria($sc['codigo']);
 
 							$subCategoriaAssinalada = $itens_fichas->buscaSubCategoriaPorMuseu();
-							if($subCategoriaAssinalada){
+
+							if($f_anterior){
+								$itens_fichas_anterior->setFicha($f_anterior['codigo']);
+								$itens_fichas_anterior->setSubCategoria($sc['codigo']);
+								
+								$subCategoriaAssinaladaFichaAnterior = $itens_fichas_anterior->buscaSubCategoriaPorMuseu();								
+							}
+
+							if($subCategoriaAssinalada){ // Marcado
+								if($f_anterior && !$subCategoriaAssinaladaFichaAnterior){ // (NOVO)
+						?>
+									<label class="checkbox-inline">
+								    <input type="checkbox" name="sub_categoria[]" value="<?= $sc['codigo'] ?>" checked>
+								   		<?= $sc['descricao'] ?> <i class="fa-solid fa-circle-check" style="color: #005000;"></i>
+								  </label>
+						<?php
+								} else {
 						?>
 								  <label class="checkbox-inline">
 								    <input type="checkbox" name="sub_categoria[]" value="<?= $sc['codigo'] ?>" checked>
 								   		<?= $sc['descricao'] ?>
 								  </label>
 						<?php
-							} else {
+								}
+							} else { //Não marcado
+								if($f_anterior && $subCategoriaAssinaladaFichaAnterior){ // (REMOVIDO)
+						?>
+									<label class="checkbox-inline">
+								    <input type="checkbox" name="sub_categoria[]" value="<?= $sc['codigo'] ?>">
+								   		<?= $sc['descricao'] ?> <i class="fa-solid fa-circle-xmark" style="color: #be0000;"></i>
+								  </label>
+						<?php
+								} else {
 						?>
 								  <label class="checkbox-inline">
 								    <input type="checkbox" name="sub_categoria[]" value="<?= $sc['codigo'] ?>">
 								   		<?= $sc['descricao'] ?>
 								  </label>
 						<?php
+								}
 							}
 					  	}
 

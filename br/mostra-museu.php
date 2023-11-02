@@ -24,6 +24,19 @@
 	$cidade->setCodCidade($m['cod_cidade']);
 	$c = $cidade->buscaCidade();
 
+	// -------------------------
+	$ficha_anterior = new Ficha($conexao);
+	$ficha_anterior->setMuseu($m);
+	$ficha_anterior->setCodigo($f['codigo']);
+	$f_anterior = $ficha_anterior->buscarAnterior();
+
+	//echo 'ficha anterior: '. $f_anterior['codigo']. '<br>';
+
+	$teste = (!empty($f_anterior)) ? $f_anterior['codigo'] : 0;
+	echo "ficha anterior: $teste <br>";
+
+	//-------------------
+
 ?>
 
 	<div class="page-header">
@@ -128,6 +141,11 @@
 								$itens_fichas->setFicha($f['codigo']);
 								$itens_fichas->setUnidadeContexto($uc['codigo']);
 								$lista_categorias_museu = $itens_fichas->listarCategoriasPorUcMuseu(); // lista categorias do museu sem repetir (distinct em categoria)
+
+								$itens_fichas_anterior = new ItensFichas($conexao);
+
+								$categoriaAssinaladaFichaAnterior = null;
+
 								//listar categorias tipo checkbox
 								foreach ($lista_categorias_museu as $cm) {
 									$categoria = new Categoria($conexao);
@@ -136,11 +154,32 @@
 
 									switch ($c['tipo_categoria']) {
 										case 1:
-											//$itens_fichas->setCategoria($c['codigo']);
-											//$cm = $itens_fichas->buscaCategoriaPorMuseu();
+
+											if($f_anterior){
+												$itens_fichas_anterior->setFicha($f_anterior['codigo']);
+												$itens_fichas_anterior->setCategoria($c['codigo']);
+												
+												$categoriaAssinaladaFichaAnterior = $itens_fichas_anterior->buscaCategoriaPorMuseu();
+
+												if(!$categoriaAssinaladaFichaAnterior){ // (NOVO)
+											?>
+												<div class="col-md-4 text-left">
+													<li class="list-group-item"> 
+														<?= $c['descricao'] ?> <i class="fa-solid fa-circle-check" style="color: #005000;"></i>
+													</li>
+												</div>
+											<?php
+												} else {
+											?>
+													<div class="col-md-4 text-left"><li class="list-group-item"> <?= $c['descricao'] ?></li></div>
+											<?php
+												}
+											} else {
+
 											?>
 										        <div class="col-md-4 text-left"><li class="list-group-item"> <?= $c['descricao'] ?></li></div>
 										    <?php
+											}
 											break;
 										
 										default:
@@ -154,8 +193,6 @@
 									$categoria->setCodigo($cm['categoria']);
 									$c = $categoria->buscar();
 
-									//$itens_fichas->setCategoria($c['codigo']);
-									//$cm = $itens_fichas->buscaCategoriaPorMuseu();
 									switch ($c['tipo_categoria']) {
 										case 4:
 											?>
@@ -173,9 +210,28 @@
 										    	foreach ($sub_categorias_museu as $scm) {
 											    	$sub_categoria->setCodigo($scm['sub_categoria']);
 											    	$sc = $sub_categoria->buscar();
+
+													if($f_anterior){
+														$itens_fichas_anterior->setFicha($f_anterior['codigo']);
+														$itens_fichas_anterior->setSubCategoria($sc['codigo']);
+														
+														$subCategoriaAssinaladaFichaAnterior = $itens_fichas_anterior->buscaSubCategoriaPorMuseu();
+		
+														if(!$subCategoriaAssinaladaFichaAnterior){ // (NOVO)
+												?>
+															<div class="col-md-4 text-left"><li class="list-group-item"> <?= $sc['descricao'] ?> <i class="fa-solid fa-circle-check" style="color: #005000;"></i></li></div>
+												<?php
+
+														} else {
+												?>
+															<div class="col-md-4 text-left"><li class="list-group-item"> <?= $sc['descricao'] ?></li></div>
+												<?php
+														}
+													} else {
 											    ?>
-										        	<div class="col-md-4 text-left"><li class="list-group-item"> <?= $sc['descricao'] ?></li></div>
+										        		<div class="col-md-4 text-left"><li class="list-group-item"> <?= $sc['descricao'] ?></li></div>
 										    	<?php
+													}
 										    	}
 
 											break;

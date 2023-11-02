@@ -12,7 +12,9 @@
 
     <!-- Bootstrap -->
     <link href="dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 

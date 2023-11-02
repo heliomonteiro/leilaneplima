@@ -9,6 +9,9 @@
           <h1>Listagem de Museus</h1>
         </div>
 
+<div>
+<?= phpversion(); ?>
+</div>
 <?php
 	$museu = new Museu($conexao);
 	$ficha = new Ficha($conexao);
